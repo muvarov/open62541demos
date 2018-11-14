@@ -1,0 +1,43 @@
+language: generic
+sudo: required
+dist: trusty
+
+addons:
+  apt:
+    packages:
+    - build-essential
+    - check
+    - cmake
+    - gcc-multilib
+    - g++-multilib
+    - graphviz
+    - libsubunit-dev
+    - python-six
+    - python3-six
+    - texlive-fonts-recommended
+    - texlive-latex-extra
+    - texlive-latex-recommended
+    - valgrind
+    - wget
+    - xutils-dev
+    - zip
+
+compiler:
+  - gcc
+  - clang
+
+before_script:
+  - git clone https://github.com/open62541/open62541.git
+  - mkdir open62541/buiild
+  - cd open62541/buiild
+  - cmake -DCMAKE_INSTALL_PREFIX=$HOME/open62541-install ../
+  - make -j $(nproc)
+  - sudo make install
+  - sudo cp open62541.h $HOME/open62541-install/include/open62541/
+  - cd -
+
+script:
+  - cd open62541temp
+  - CFLAGS=`pkg-config --cflags $HOME/open62541-install/lib/pkgconfig/open62541.pc`
+  - LDFLAGS=`pkg-config --libs $HOME/open62541-install/lib/pkgconfig/open62541.pc`
+  - make CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS"
