@@ -21,6 +21,7 @@ addons:
     - wget
     - xutils-dev
     - zip
+    - libsensors4-dev
 
 compiler:
   - gcc
