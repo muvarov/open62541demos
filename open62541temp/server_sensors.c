@@ -6,11 +6,13 @@
 #define _CRT_SECURE_NO_WARNINGS /* disable fopen deprication warning in msvs */
 #endif
 
-#include "open62541.h"
 #include "common.h"
 #include <signal.h>
 #include <sensors/sensors.h>
 
+#include <ua_server.h>
+#include <ua_config_default.h>
+#include <ua_log_stdout.h>
 
 static const UA_NodeId baseDataVariableType = {0, UA_NODEIDTYPE_NUMERIC, {UA_NS0ID_BASEDATAVARIABLETYPE}};
 static const UA_NodeId accessDenied = {1, UA_NODEIDTYPE_NUMERIC, {1337}};
@@ -187,9 +189,13 @@ static int register_sensors(UA_Server *server) {
 	return 0;
 }
 
+extern void max_lwip_init(void);
+
 int main(int argc, char **argv) {
 	signal(SIGINT, stopHandler); /* catches ctrl-c */
 	signal(SIGTERM, stopHandler);
+
+	max_lwip_init();
 
 	UA_ServerConfig *config;
 #ifdef UA_ENABLE_ENCRYPTION
@@ -268,5 +274,6 @@ int main(int argc, char **argv) {
 	UA_StatusCode retval = UA_Server_run(server, &running);
 	UA_Server_delete(server);
 	UA_ServerConfig_delete(config);
+	printf("exit from main with %d\n", (int)retval);
 	return (int)retval;
 }
