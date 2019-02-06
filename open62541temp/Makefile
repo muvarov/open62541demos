@@ -10,12 +10,16 @@ LWIP_FLAGS = "-I${LWIP_SRC}/include -I${LWIP_SRC}/../contrib/ports/unix/lib \
 IPXDP ?= /opt/Linaro/xdp/open62541.git/lwip
 
 all:
-	$(CC) -std=c99 client_async.c `${CF}` `${LD}` -I${LWIP_SRC}/include \
+	$(CC) -std=c99 client_async.c lwip_init.c \
+		 `${CF}` `${LD}` ${LWIP_FLAGS} \
+		-I${LWIP_SRC}/include \
 		-I${LWIP_SRC}/../contrib/ports/unix/lib \
 		-I${LWIP_SRC}/../contrib/ports/unix/port/include \
 		-I${OPCUA_SRC}/arch/common \
+		-I${IPXDP} \
 		-L${IPXDP} -lipxdp \
-		 ${CFLAGS} ${LDFLAGS} -l open62541 -o client_async
+		${CFLAGS} ${LDFLAGS} \
+		-l open62541 -o client_async
 	$(CC) -std=c99 server_ctt.c lwip_init.c \
 		 `${CF}` `${LD}` ${LWIP_FLAGS} \
 		-I${LWIP_SRC}/include \

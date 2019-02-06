@@ -18,6 +18,8 @@
 #include <ua_log_stdout.h>
 #include <ua_client_highlevel_async.h>
 
+extern void max_lwip_init(void);
+
 #define NODES_EXIST
 /* async connection callback, it only gets called after the completion of the whole
  * connection process*/
@@ -133,6 +135,8 @@ main (int argc, char *argv[]) {
 	UA_Client *client = UA_Client_new (UA_ClientConfig_default);
 	UA_UInt32 reqId = 0;
 	UA_String userdata = UA_STRING ("userdata");
+
+	max_lwip_init();
 
 	UA_BrowseRequest bReq;
 	UA_BrowseRequest_init (&bReq);
