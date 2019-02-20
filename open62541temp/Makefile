@@ -30,6 +30,7 @@ all:
 		-L${IPXDP} -lipxdp \
 		${CFLAGS} ${LDFLAGS} \
 		-l open62541 -o server_ctt
+ifneq ($(ARCH),arm)
 	$(CC) -std=c99 server_sensors.c \
 			lwip_init.c \
 		 `${CF}` `${LD}` ${LWIP_FLAGS} \
@@ -42,7 +43,7 @@ all:
 		${CFLAGS} ${LDFLAGS} \
 		-l open62541 -o server_sensors \
 		${CFLAGS} ${LDFLAGS} -l open62541 -lsensors -o server_sensors
-
+endif
 
 LWXPD_LIB:="/opt/Linaro/xdp/ipxdp.git/lwip" 
 KSRC:="/opt/Linaro/xdp/linux.git"
